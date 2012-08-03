@@ -17,7 +17,7 @@ Also you can specify a custom password dictionary to try to crack the network wh
 
 ## Default passwords?
 
-Yes, the information has been taken from tools like wlandecrypter,jazzteldecrypter,decsagem,wlan4x....
+Yes, the information has been taken from tools like wlandecrypter, jazzteldecrypter, decsagem, wlan4x....
 
 If I have not mentioned you under "Credits", let me know to fix it.
 
