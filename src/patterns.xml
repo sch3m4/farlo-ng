@@ -1,0 +1,75 @@
+<!--
+
+For each network pattern, you should to specify the following fields:
+
+Required:
+   - algorithm
+   - encryption
+
+Optional (at least one of them, or both)
+   - essid
+   - bssid
+
+Behauvior:
+   + When both optional fields are specified (essid and bssid), the network must match
+     these (both) fields to be cracked (AND comparison).
+
+   + When only one of them is present, the other field is ignored and the match criteria
+     is based only in the present field.
+
+An optional field will be ignored, when it is empty or not pressent in the network pattern.
+
+*IMPORTANT*: all fields are **case-insensitive**
+
+Example of network patterns ignoring bssid filter:
+
+<network essid="^WLAN_" bssid="" encryption=".*" algorithm="XXYY" />
+<network essid="^WLAN_"          encryption=".*" algorithm="XXYY" />
+
+Example of invalid network pattern:
+
+<network encryption=".*" algorithm="XXYY" />
+
+-->
+
+<farlo-ng>
+	# ZyXel routers
+	<network bssid="^00:(13:49|02:CF).*" encryption=".*" algorithm="ZYXEL_P660HWD1" />
+	<network bssid="^00:(13:49|A0:C5).*" encryption=".*" algorithm="ZYXEL_P6X0HW" />
+	<network bssid="^00:(19:CB|02:CF).*" encryption=".*" algorithm="ZYXEL_P660HWFTTH" />
+	<network bssid="^00:1F:A4.*" encryption=".*" algorithm="ZYXEL_P660HWB1A" />
+	<network bssid="^(00:23:F8|40:4A:03).*" encryption=".*" algorithm="ZYXEL_P660HW_D1" />
+
+	# Comtrend routers
+	<network bssid="^00:(03:C9|16:38|19:15|C3:DA|30:DA|03:DA).*" encryption="wep" algorithm="COMTREND_CT_535" />
+	<network bssid="^00:1D:20.*" encryption="wep" algorithm="COMTREND_AR_5381U" />
+	<network bssid="^00:1A:2B.*" encryption="wep" algorithm="COMTREND_CT_536T" />
+	<network bssid="^(64:68:0C|00:1D:20|00:23:F8|00:1B:20|00:30:DA).*" encrypt="(wpa|wpa2)" algorithm="COMTREND_WPAMAC" />
+	<network bssid="^(64:68:0C|00:1A:2B).*" encrypt="(wpa|wpa2)" algorithm="COMTREND_WPASSID" />
+
+	# ZCom
+	<network bssid="^00:(60:B3|A0:C5).*" encryption="wep" algorithm="ZCOM_GENERIC" />
+
+	# Huawei
+	<network bssid="^00:18:02.*" encryption=".*" algorithm="HG520V_FTTH" />
+	<network essid="^INFINITUM[a-f0-9]{4}$" encryption="wep" algorithm="HUAWEI_HG5XX" />
+
+	# Thomson
+	<network bssid="^00:1F:9F.*" encryption=".*" algorithm="TH_GENROUTER" />
+	<network essid="^SpeedTouch[a-f0-9]{6}$" encryption=".*" algorithm="THOMSON_58X" />
+	<network essid="^BTHomeHub-[a-f0-9]{4}$" encryption=".*" algorithm="THOMSON_58X" />
+
+	# Xavi
+	<network bssid="^00:01:(36|38).*" encryption=".*" algorithm="XAVI_7768R" />
+	<network bssid="^E0:91:53.*" encryption=".*" algorithm="XAVI_7968RD461X" />
+
+	# Zygate
+	<network bssid="^00:02:CF.*" encryption=".*" algorithm="ZYGATE_GENERIC" />
+
+	# DLink
+	<network essid="^DLINK.*" encryption=".*" algorithm="DLINK" />
+
+	# SMC
+	<network essid="^(WLAN|YACOM|WIFI)[a-f0-9]{6}$" bssid="^(00:13:F7|88:25:2C|00:26:4D|00:22:2D|00:23:08).*" encryption=".*" algorithm="SMC" />
+
+</farlo-ng>
