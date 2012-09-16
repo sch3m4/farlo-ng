@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -184,6 +184,14 @@ unsigned short net_allowed ( struct wnetwork *net )
 {
     unsigned short  ret = 0;
     ppattern_t      pattern;
+
+    /* bssid filter is enabled and does not match this one */
+    if ( settings.filter.bssid[0] != 0 && strcmp(settings.filter.bssid,net->bssid) != 0 )
+    	return ret;
+
+    /* encryption filter is enabled and does not match this one */
+    if ( settings.filter.encryption > 0 && net->encrypt != settings.filter.encryption )
+    	return ret;
 
     for ( pattern = patterns ; pattern != 0 && !ret ; pattern = pattern->next )
     {

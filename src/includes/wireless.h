@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -64,6 +64,7 @@
 typedef struct
 {
     unsigned char   version;
+    unsigned char	pad;
     unsigned short  len;
     unsigned int    present;
 } radiotaphdr_t , *pradiotaphdr_t ;

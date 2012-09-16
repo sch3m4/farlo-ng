@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -43,7 +43,7 @@ static const char comtrend_routers[][17] =
     "COMTREND_WPAMAC\0",
     "COMTREND_WPASSID\0",
 };
-#define GET_COMTREND_KEY(val)    (val!=1)?NULL:comtrend_routers[(val)-1]
+#define GET_COMTREND_KEY(val)    (val>2)?NULL:comtrend_routers[(val)-1]
 
 void comtrend_pwd ( struct crackdata *crack , unsigned int pattern );
 

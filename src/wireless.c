@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -144,7 +144,7 @@ void *channel_hopping ( void *param )
             if ( ioctl ( fd, SIOCSIWFREQ, &wrq ) < 0 )
                 fprintf ( stderr , "\n[e] Error (%d) setting interface channel %d: %s" , errno , i + 1 , strerror ( errno ) );
 
-            usleep ( settings.delay );
+            usleep ( settings.delay * 1000 );
 
             pthread_testcancel();
         }
@@ -187,7 +187,7 @@ void get_netinfo ( unsigned char *pkt , size_t len , struct wnetwork *net )
         break;
 
     default:
-        fprintf ( stderr , "\n[W] get_netinfo(): Don't know what is %04X" , ntohs(*(unsigned short*)pkt ) );
+        fprintf ( stderr , "\n[W] get_netinfo(): Don't know what is %02X" , ntohs(*(unsigned short*)pkt ) );
         break;
     }
 
@@ -421,7 +421,7 @@ static void show_network ( struct wnetwork *net )
 
 void procPacket ( unsigned char *arg, const struct pcap_pkthdr *pkthdr, const unsigned char *packet )
 {
-    unsigned int        offset = 0, i;
+    unsigned int        offset = 0, i, delta = 0;
     pradiotaphdr_t      radio = 0;
     pwirelesshdr_t      wheader = 0;
     pframectrl_t        control = 0;
@@ -434,16 +434,11 @@ void procPacket ( unsigned char *arg, const struct pcap_pkthdr *pkthdr, const un
     unsigned long       hash = 0;
 
     // wireless header offset calculation
-    switch ( settings.dlt )
+    if ( settings.dlt == DLT_IEEE802_11_RADIO )
     {
-    case DLT_IEEE802_11_RADIO:
-        radio = (pradiotaphdr_t)packet;
+    	radio = (pradiotaphdr_t)packet;
         offset = radio->len;
-        break;
-
-    case DLT_IEEE802_11:
-        memcpy ( &offset , &packet[2] , 2 );
-        break;
+        delta = 4; // frame sequence verification is added at the end of packet data
     }
 
     wheader = ( pwirelesshdr_t )(packet + offset);
@@ -461,8 +456,10 @@ void procPacket ( unsigned char *arg, const struct pcap_pkthdr *pkthdr, const un
     snprintf ( bssid, sizeof ( bssid ) , "%02hx:%02hx:%02hx:%02hx:%02hx:%02hx", wheader->add2[0], wheader->add2[1], wheader->add2[2], wheader->add2[3], wheader->add2[4], wheader->add2[5] );
     for ( i = 0; i < strlen ( bssid ); i++ )
         bssid[i] = toupper ( bssid[i] );
+
     // get the hash for the given bssid
-    hash = htable_sdbm_hash( (unsigned char*) bssid);
+    if ( !( hash = htable_sdbm_hash( (unsigned char*) bssid) ) )
+    	return;
 
     /* if it is a beacon frame, check if the wireless is encrypted and store it */
     if ( isbeacon )
@@ -476,7 +473,7 @@ void procPacket ( unsigned char *arg, const struct pcap_pkthdr *pkthdr, const un
             return;
 
         /* new network to store */
-        net = calloc ( 1, sizeof ( struct wnetwork ) );
+        SAFE_CALLOC ( net , 1 , sizeof ( struct wnetwork ) );
         data = (unsigned char*)beacon + sizeof ( beaconhdr_t );
         aux = ( (unsigned char*)packet + pkthdr->caplen );
         strncpy ( net->bssid , bssid , sizeof(net->bssid));
@@ -488,8 +485,14 @@ void procPacket ( unsigned char *arg, const struct pcap_pkthdr *pkthdr, const un
         if ( net_allowed(net) )
             net->allowed++;
 
-        if ( net->allowed || !settings.supported )
-            show_network( net );
+        /* if we are filtering, show only the allowed networks */
+        if ( settings.filter.bssid[0] != 0 || settings.filter.encryption > 0 )
+        {
+        	if ( net->allowed )
+        		show_network( net );
+        }else if ( net->allowed || !settings.supported )
+        	show_network( net );
+
     }
     else
     {
@@ -505,10 +508,10 @@ void procPacket ( unsigned char *arg, const struct pcap_pkthdr *pkthdr, const un
 
         wep_header = ( struct wep_header * ) ( (unsigned char*)wheader + sizeof ( wirelesshdr_t )  );
         data = (unsigned char*)wep_header + sizeof ( struct wep_header );
-        net->pwd.datalen = pkthdr->caplen - (data - packet);
+        net->pwd.datalen = pkthdr->caplen - ( data - packet ) - delta;
 
-        net->pwd.data = (unsigned char*) calloc ( net->pwd.datalen , sizeof ( unsigned char ) );
-        net->pwd.datatmp = (unsigned char*) calloc ( net->pwd.datalen , sizeof ( unsigned char ) );
+        SAFE_CALLOC ( net->pwd.data , net->pwd.datalen , sizeof ( unsigned char) );
+        SAFE_CALLOC ( net->pwd.datatmp , net->pwd.datalen , sizeof ( unsigned char) );
 
         memcpy ( net->pwd.data , data , net->pwd.datalen );
         memcpy ( (void*)&net->pwd.hdr , wep_header , sizeof ( struct wep_header ) );

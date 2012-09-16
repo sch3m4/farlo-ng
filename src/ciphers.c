@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -54,6 +54,7 @@ static unsigned short check_crc_buf( unsigned char *buf, int len )
 
     crc = calc_crc(buf, len);
     buf+=len;
+
     return( ( ( crc       ) & 0xFF ) == buf[0] &&
             ( ( crc >>  8 ) & 0xFF ) == buf[1] &&
             ( ( crc >> 16 ) & 0xFF ) == buf[2] &&

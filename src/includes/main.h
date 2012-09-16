@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -39,11 +39,13 @@
 #include <assert.h>
 #include <pthread.h>
 
+#include "includes/wireless.h"
+
 #define SAFE_CALLOC(a,n,t)  assert((a=(void*)calloc(n,t))!=0)
 #define SAFE_FREE(a)        if(a!=0){free(a);a=0;}
 
 #ifndef CHANNEL_HOPPING_DELAY
-# define CHANNEL_HOPPING_DELAY  100000
+# define CHANNEL_HOPPING_DELAY  30000  // miliseconds
 #endif
 
 // wireless channels
@@ -51,6 +53,13 @@
 
 typedef struct
 {
+	char			bssid[BSSID_LEN];
+	unsigned short	encryption;
+}filter_t,*pfilter_t;
+
+typedef struct
+{
+	filter_t		filter;
     char            *source;
     unsigned short  live;
     pcap_t          *handle;

@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -40,6 +40,9 @@
 unsigned long htable_sdbm_hash ( unsigned char *str )
 {
     unsigned long hash = 0;
+
+    if ( !str )
+	return hash;
 
     while ( *str )
         hash = *str++ + (hash << 6) + (hash << 16) - hash;

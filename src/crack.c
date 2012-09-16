@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -136,9 +136,9 @@ static void *crack_passwd ( void *p )
             /* not supported yet */
         case ENCRYPT_WPA:
         case ENCRYPT_WPA2:
-            /* save the passwords to file */
-            if ( !crack->net->pwd.path[0])
-                snprintf ( (char*)crack->net->pwd.path , sizeof ( crack->net->pwd ) , "dic_%s_%s" , crack->net->essid , crack->net->bssid );
+            /* creates the dictionary */
+            if ( !crack->net->pwd.path[0] )
+                snprintf ( (char*)crack->net->pwd.path , sizeof ( crack->net->pwd ) , "dic_%s_%s.lst" , crack->net->essid , crack->net->bssid );
 
             if ( !fd && (fd = open ( (char*)crack->net->pwd.path , O_CREAT | O_WRONLY | O_APPEND | O_NONBLOCK , S_IRUSR | S_IWUSR ) ) < 0 )
             {
@@ -259,6 +259,14 @@ void *crack_thread ( void *p )
         SAFE_FREE ( item );
 
         fprintf ( stderr , "\n[i] Cracking %s network %s (%s)\n" , GET_ENCRYPT_STRING(net->encrypt) , net->essid , net->bssid );
+
+        /* not a WEP network */
+        if ( net->encrypt != ENCRYPT_WEP )
+        {
+        	fprintf ( stderr , "\n\t+ This network will not be cracked because the network encryption is not supported");
+        	fprintf ( stderr , "\n\t  but the dictionary is going to  be created (see the application parameters");
+        	fprintf ( stderr , "\n\t  to filter the network encryption)\n");
+        }
 
         crack_network(net);
 

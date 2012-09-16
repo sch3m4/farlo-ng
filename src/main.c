@@ -1,5 +1,5 @@
 /*********************************************************************************
- * Copyright (c) 2009, Chema Garcia                                              *
+ * Copyright (c) 2012, Chema Garcia                                              *
  * All rights reserved.                                                          *
  *                                                                               *
  * Redistribution and use in source and binary forms, with or                    *
@@ -64,13 +64,15 @@ void usage ( char *name )
     fprintf ( stderr, "\nUsage: %s [options]\n", name );
     fprintf ( stderr , "\n[+] Options:" );
 
-    fprintf ( stderr, "\n\t-i | --iface <name> --------> Interface name" );
-    fprintf ( stderr, "\n\t-f | --file <path> ---------> Path to file" );
-    fprintf ( stderr, "\n\t-p | --patterns <path> -----> Networks patterns file");
-    fprintf ( stderr, "\n\t-s | --supported -----------> Show only supported networks");
-    fprintf ( stderr, "\n\t-d | --dictionary <path> ---> Auxiliary dictionary");
-    fprintf ( stderr, "\n\t-c | --channel <channels> --> Channels list (comma separated)");
-    fprintf ( stderr, "\n\t-D | --delay <usec> --------> Delay between channels");
+    fprintf ( stderr, "\n\t-i | --iface <name> ---------------> Interface name" );
+    fprintf ( stderr, "\n\t-f | --file <path> ----------------> Path to file" );
+    fprintf ( stderr, "\n\t-b | --bssid <bssid> --------------> Capture only from this bssid");
+    fprintf ( stderr, "\n\t-e | --encryption <wep/wpa/wpa2> --> Encryption filter");
+    fprintf ( stderr, "\n\t-p | --patterns <path> ------------> Networks patterns file");
+    fprintf ( stderr, "\n\t-s | --supported ------------------> Show only supported networks");
+    fprintf ( stderr, "\n\t-d | --dictionary <path> ----------> Auxiliary dictionary");
+    fprintf ( stderr, "\n\t-c | --channel <channels> ---------> Channels list (comma separated)");
+    fprintf ( stderr, "\n\t-D | --delay <msec> ---------------> Delay between channels");
 
     return;
 }
@@ -106,7 +108,7 @@ int main( int argc , char *argv[] )
     char                    errbuf[PCAP_ERRBUF_SIZE] = {0};
     unsigned short          ret = 0;
     char                    o = 0;
-    const char              schema[] = "i:f:p:sd:c:D:";
+    const char              schema[] = "i:f:p:sd:c:D:b:e:";
     int                     i = 0 , j = 0;
     unsigned short          channel = 0;
     static struct option    opc[] =
@@ -118,24 +120,30 @@ int main( int argc , char *argv[] )
         {"dictionary",1,0,'d'},
         {"channels",1,0,'c'},
         {"delay",1,0,'D'},
+        {"bssid",1,0,'b'},
+        {"encryption",1,0,'e'},
         {0, 0, 0, 0}
     };
 
-    fprintf ( stderr , "      ______ _______ _______  ______         _____  ______" );
-    fprintf ( stderr , "\n     /\\      |______ |_____| |_____/ |      |     |      /\\" );
-    fprintf ( stderr , "\n..~.~\\/_____ |       |     | |    \\_ |_____ |_____| _____\\/~.~..\n" );
 
-    fprintf ( stderr, "\n\t      Wireless AP Password Revealer %s\n" , VERSION );
-    fprintf ( stderr, "\n\t   +============[ Written by ]=============+" );
-    fprintf ( stderr, "\n\t   |      Chema Garcia (a.k.a. sch3m4)     |" );
-    fprintf ( stderr, "\n\t   |---------------------------------------|" );
-    fprintf ( stderr, "\n\t   |         http://SafetyBits.Net         |" );
-    fprintf ( stderr, "\n\t   |          chema@safetybits.net         |" );
-    fprintf ( stderr, "\n\t   +=======================================+\n" );
+    fprintf ( stderr , "      _____  _______ _______  ______         _____      __   _  ______  _____      \n");
+    fprintf ( stderr , "     /\\      |______ |_____| |_____/ |      |     | ___ | \\  | |  ____      /\\     \n");
+    fprintf ( stderr , "..~.~\\/____  |       |     | |    \\_ |_____ |_____|     |  \\_| |_____|  ____\\/~.~..\n");
+
+
+    fprintf ( stderr, "\n\t\t      Wireless AP Password Revealer %s\n" , VERSION );
+    fprintf ( stderr, "\n\t\t   +============[ Written by ]=============+" );
+    fprintf ( stderr, "\n\t\t   |      Chema Garcia (a.k.a. sch3m4)     |" );
+    fprintf ( stderr, "\n\t\t   |---------------------------------------|" );
+    fprintf ( stderr, "\n\t\t   |         http://SafetyBits.Net         |" );
+    fprintf ( stderr, "\n\t\t   |          chema@safetybits.net         |" );
+    fprintf ( stderr, "\n\t\t   +=======================================+\n" );
 
     memset ( &settings , 0 , sizeof ( settings_t ) );
     // set default parameters
     settings.table_size = DEFAULT_TABLE_SIZE;
+    settings.delay = CHANNEL_HOPPING_DELAY;
+    memset ( &settings.channels , 1 , sizeof ( settings.channels) );
 
     // parse the parameters
     while ( !ret && ( o = getopt_long ( argc, argv, schema , opc, &i ) ) > 0 )
@@ -152,9 +160,33 @@ int main( int argc , char *argv[] )
             settings.live = 0;
             break;
 
+        case 'b':
+        	strncpy(settings.filter.bssid,optarg,sizeof(settings.filter.bssid));
+        	break;
+
         case 'p':
             settings.configpath = strdup ( optarg );
             break;
+
+        case 'e':
+        	j = strlen(optarg);
+        	if ( !j || j > strlen(GET_ENCRYPT_STRING(ENCRYPT_WPA)) )
+        		goto invalid_fe;
+
+        	// convert the filter to upper-case
+        	for ( j = 0 ; j < strlen(optarg) ; j++ )
+        		optarg[j] = toupper(optarg[j]);
+
+        	for ( j = 0 ; j < ENCRYPT_WPA2 ; j++ )
+        		if ( !strcmp ( GET_ENCRYPT_STRING(j + 1) , optarg ) )
+        			settings.filter.encryption = j + 1;
+
+        	if ( settings.filter.encryption != 0 )
+        		break;
+
+invalid_fe:
+			fprintf ( stderr , "\n[e] Invalid encryption filter");
+        	break;
 
         case 's':
             settings.supported = 1;
@@ -182,8 +214,7 @@ int main( int argc , char *argv[] )
             break;
 
         case 'c':
-            if ( !settings.delay )
-                settings.delay = CHANNEL_HOPPING_DELAY;
+        	memset ( &settings.channels , 0, sizeof ( settings.channels) );
             /* parse channels */
             j = 0;
             while ( optarg[j] != 0 )
@@ -232,7 +263,7 @@ cherror:
     }
 
     // cannot run
-    if ( ret || !settings.source || !settings.configpath )
+    if ( ret != 0 || !settings.source || !settings.configpath )
     {
         usage ( argv[0] );
         shandler(0);
@@ -253,14 +284,28 @@ cherror:
         }
 
         if ( settings.delay )
+        {
+        	/* check enabled channels */
+        	j = 0;
+        	for ( i = 0 ; i < MAX_CHANNELS && !j; i++ )
+        		if ( settings.channels[i] != 0 )
+        			j++;
+
+        	if ( !j )
+        	{
+        		fprintf ( stderr , "\n[e] You cannot specify channels hopping delay without selecting channels");
+        		shandler(2);
+        	}
+
             pthread_create(&settings.hoptid,0,channel_hopping,0);
+        }
     }
     else
     {
         if ( ( settings.handle = pcap_open_offline ( settings.source, errbuf ) ) == NULL )
         {
             fprintf ( stderr, "\n[!] %s", errbuf );
-            shandler(2);
+            shandler(3);
         }
     }
 
@@ -271,12 +316,32 @@ cherror:
     if ( ( i = load_network_patterns() ) < 0 )
     {
         fprintf ( stderr , "\n[!] Error loading network patterns: %s" , GET_PATTERNS_ERRSTR(i) );
-        shandler(3);
+        shandler(4);
     }
+
     settings.dlt = pcap_datalink(settings.handle);
+
+    switch ( settings.dlt )
+    {
+    	case DLT_IEEE802_11:
+    		break;
+
+    	case DLT_IEEE802_11_RADIO:
+    		break;
+
+    	default:
+    		fprintf ( stderr , "\n[e] Network datalink not supported: %s" , pcap_datalink_val_to_name( settings.dlt ) );
+    		shandler(5);
+    		break; // avoid IDE warning...
+
+    }
 
     fprintf ( stderr , "\n[+] Capturing from: %s" , settings.source );
     fprintf ( stderr , "\n[+] Datalink: %s" , pcap_datalink_val_to_name( settings.dlt ) );
+    if ( settings.filter.bssid[0] != 0 )
+    	fprintf ( stderr , "\n[+] BSSID filter: %s" , settings.filter.bssid );
+    if ( settings.filter.encryption != 0 )
+    	fprintf ( stderr , "\n[+] Encryption filter: %s" , GET_ENCRYPT_STRING(settings.filter.encryption) );
     fprintf ( stderr , "\n[+] Network patterns: %s" , settings.configpath );
     if ( settings.delay && settings.live )
     {
@@ -294,7 +359,7 @@ cherror:
                 }
             }
 
-        fprintf ( stderr , "\n[+] Channel hopping delay: %lu usec." , settings.delay );
+        fprintf ( stderr , "\n[+] Channel hopping delay: %lu msec." , settings.delay );
     }
     fprintf ( stderr , "\n" );
 
@@ -302,9 +367,11 @@ cherror:
     if ( ( i = pcap_loop ( settings.handle, -1, procPacket, NULL ) ) < 0 )
     {
         fprintf ( stderr, "\n[!] %s\n\n", pcap_geterr ( settings.handle ) );
-        shandler(3);
+        shandler(6);
     }
 
+	while(1)
+		sleep(5);
     shandler(0);
     return 0;
 }

@@ -4,7 +4,7 @@
 
 ## History
 
-This version is based on an old project that I did some time ago (may be 2009/2010...)
+This version is *based* on an old project that I did some time ago (may be 2009/2010...)
 
 ## Farlo-NG
 

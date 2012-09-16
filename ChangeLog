@@ -1,0 +1,16 @@
+Farlo-NG (0.5.9b)
+
+	* Added encryption filter
+	* Added bssid filter
+	* Added extension '.lst' when creating the dictionaries
+	* Shows a message when the network encryption is not supported
+	* Fixed a bug which causes to farlo-ng not to be able to run
+
+	-- Chema Garcia <chema@safetybits.net> (XX/XX/2012)
+	
+	
+Farlo-NG (0.5.8b)
+
+	* First release
+	
+	-- Chema Garcia <chema@safetybits.net> (03/06/2012)
