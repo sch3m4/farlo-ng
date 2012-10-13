@@ -73,6 +73,7 @@ void usage ( char *name )
     fprintf ( stderr, "\n\t-d | --dictionary <path> ----------> Auxiliary dictionary");
     fprintf ( stderr, "\n\t-c | --channel <channels> ---------> Channels list (comma separated)");
     fprintf ( stderr, "\n\t-D | --delay <msec> ---------------> Delay between channels");
+    fprintf ( stderr, "\n\t-n | --no-hop ---------------------> Do not do channel hopping");
 
     return;
 }
@@ -80,10 +81,13 @@ void usage ( char *name )
 /* signal handler */
 void shandler ( int sign )
 {
-    SAFE_FREE ( settings.source );
-    SAFE_FREE ( settings.configpath );
+	static unsigned short retries = 0;
 
-    if ( settings.live && settings.delay )
+	signal ( sign, shandler );
+
+	retries++;
+
+    if ( settings.hopping )
     {
         pthread_cancel(settings.hoptid);
         pthread_join(settings.hoptid,0);
@@ -97,6 +101,9 @@ void shandler ( int sign )
     free_patterns();
     free_algorithms();
 
+    SAFE_FREE ( settings.source );
+    SAFE_FREE ( settings.configpath );
+
     fprintf ( stderr , "\n\n" );
 
     exit ( sign );
@@ -108,7 +115,7 @@ int main( int argc , char *argv[] )
     char                    errbuf[PCAP_ERRBUF_SIZE] = {0};
     unsigned short          ret = 0;
     char                    o = 0;
-    const char              schema[] = "i:f:p:sd:c:D:b:e:";
+    const char              schema[] = "i:f:p:sd:c:D:b:e:n";
     int                     i = 0 , j = 0;
     unsigned short          channel = 0;
     static struct option    opc[] =
@@ -122,6 +129,7 @@ int main( int argc , char *argv[] )
         {"delay",1,0,'D'},
         {"bssid",1,0,'b'},
         {"encryption",1,0,'e'},
+        {"no-hop",0,0,'n'},
         {0, 0, 0, 0}
     };
 
@@ -143,6 +151,7 @@ int main( int argc , char *argv[] )
     // set default parameters
     settings.table_size = DEFAULT_TABLE_SIZE;
     settings.delay = CHANNEL_HOPPING_DELAY;
+    settings.hopping = 1;
     memset ( &settings.channels , 1 , sizeof ( settings.channels) );
 
     // parse the parameters
@@ -154,6 +163,10 @@ int main( int argc , char *argv[] )
             settings.source = strdup ( optarg );
             settings.live = 1;
             break;
+
+        case 'n':
+        	settings.hopping = 0;
+        	break;
 
         case 'f':
             settings.source = strdup ( optarg );
@@ -282,23 +295,6 @@ cherror:
             fprintf ( stderr, "\n[!] %s", errbuf );
             shandler(1);
         }
-
-        if ( settings.delay )
-        {
-        	/* check enabled channels */
-        	j = 0;
-        	for ( i = 0 ; i < MAX_CHANNELS && !j; i++ )
-        		if ( settings.channels[i] != 0 )
-        			j++;
-
-        	if ( !j )
-        	{
-        		fprintf ( stderr , "\n[e] You cannot specify channels hopping delay without selecting channels");
-        		shandler(2);
-        	}
-
-            pthread_create(&settings.hoptid,0,channel_hopping,0);
-        }
     }
     else
     {
@@ -336,6 +332,30 @@ cherror:
 
     }
 
+    if ( settings.live && settings.hopping )
+    {
+    	/* check enabled channels */
+    	j = 0;
+    	for ( i = 0 ; i < MAX_CHANNELS && !j; i++ )
+    		if ( settings.channels[i] != 0 )
+    			j++;
+
+    	if ( !j )
+    	{
+    		fprintf ( stderr , "\n[w] You have no selected channels, enabling them all...");
+    		for ( i = 0 ; i < MAX_CHANNELS && !j; i++ )
+    			settings.channels[i] = 1;
+    	}
+
+    	if ( ! settings.delay )
+    	{
+    		fprintf ( stderr , "\n[w] You have no selected channel hopping delay, using the default value...");
+    		settings.delay = CHANNEL_HOPPING_DELAY;
+    	}
+
+        pthread_create(&settings.hoptid,0,channel_hopping,0);
+    }
+
     fprintf ( stderr , "\n[+] Capturing from: %s" , settings.source );
     fprintf ( stderr , "\n[+] Datalink: %s" , pcap_datalink_val_to_name( settings.dlt ) );
     if ( settings.filter.bssid[0] != 0 )
@@ -343,23 +363,27 @@ cherror:
     if ( settings.filter.encryption != 0 )
     	fprintf ( stderr , "\n[+] Encryption filter: %s" , GET_ENCRYPT_STRING(settings.filter.encryption) );
     fprintf ( stderr , "\n[+] Network patterns: %s" , settings.configpath );
-    if ( settings.delay && settings.live )
+    if ( settings.live )
     {
-        j = 0;
-        fprintf ( stderr , "\n[+] Using channel(s): ");
-        for ( i = 0 ; i < MAX_CHANNELS ; i++ )
-            if ( settings.channels[i] )
-            {
-                if ( j )
-                    fprintf ( stderr , ",%hu" , i + 1 );
-                else
-                {
-                    fprintf ( stderr , "%hu" , i + 1 );
-                    j++;
-                }
-            }
+    	if ( settings.hopping )
+    	{
+			j = 0;
+			fprintf ( stderr , "\n[+] Using channel(s): ");
+			for ( i = 0 ; i < MAX_CHANNELS ; i++ )
+				if ( settings.channels[i] )
+				{
+					if ( j )
+						fprintf ( stderr , ",%hu" , i + 1 );
+					else
+					{
+						fprintf ( stderr , "%hu" , i + 1 );
+						j++;
+					}
+				}
 
-        fprintf ( stderr , "\n[+] Channel hopping delay: %lu msec." , settings.delay );
+			fprintf ( stderr , "\n[+] Channel hopping delay: %lu msec." , settings.delay );
+    	}else
+    		fprintf ( stderr , "\n[+] Don't doing channel hopping");
     }
     fprintf ( stderr , "\n" );
 

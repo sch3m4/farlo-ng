@@ -49,7 +49,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-farlo_PROGRAMS = farlo$(EXEEXT)
+farlo_ng_PROGRAMS = farlo-ng$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -60,22 +60,23 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(farlodir)"
-PROGRAMS = $(farlo_PROGRAMS)
+am__installdirs = "$(DESTDIR)$(farlo_ngdir)"
+PROGRAMS = $(farlo_ng_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_farlo_OBJECTS = farlo-main.$(OBJEXT) farlo-crack.$(OBJEXT) \
-	farlo-htable.$(OBJEXT) algorithms/farlo-xavi.$(OBJEXT) \
-	algorithms/farlo-zyxel.$(OBJEXT) \
-	algorithms/farlo-comtrendwpa.$(OBJEXT) \
-	algorithms/farlo-dlink.$(OBJEXT) \
-	algorithms/farlo-smc.$(OBJEXT) \
-	algorithms/farlo-huawei.$(OBJEXT) \
-	algorithms/farlo-thomson.$(OBJEXT) \
-	algorithms/farlo-wlanlike.$(OBJEXT) farlo-patterns.$(OBJEXT) \
-	farlo-cbuffer.$(OBJEXT) farlo-wireless.$(OBJEXT) \
-	farlo-ciphers.$(OBJEXT) farlo-algorithms.$(OBJEXT)
-farlo_OBJECTS = $(am_farlo_OBJECTS)
-farlo_LDADD = $(LDADD)
+am_farlo_ng_OBJECTS = farlo_ng-main.$(OBJEXT) farlo_ng-crack.$(OBJEXT) \
+	farlo_ng-htable.$(OBJEXT) algorithms/farlo_ng-xavi.$(OBJEXT) \
+	algorithms/farlo_ng-zyxel.$(OBJEXT) \
+	algorithms/farlo_ng-comtrendwpa.$(OBJEXT) \
+	algorithms/farlo_ng-dlink.$(OBJEXT) \
+	algorithms/farlo_ng-smc.$(OBJEXT) \
+	algorithms/farlo_ng-huawei.$(OBJEXT) \
+	algorithms/farlo_ng-thomson.$(OBJEXT) \
+	algorithms/farlo_ng-wlanlike.$(OBJEXT) \
+	farlo_ng-patterns.$(OBJEXT) farlo_ng-cbuffer.$(OBJEXT) \
+	farlo_ng-wireless.$(OBJEXT) farlo_ng-ciphers.$(OBJEXT) \
+	farlo_ng-algorithms.$(OBJEXT)
+farlo_ng_OBJECTS = $(am_farlo_ng_OBJECTS)
+farlo_ng_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -84,8 +85,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(farlo_SOURCES)
-DIST_SOURCES = $(farlo_SOURCES)
+SOURCES = $(farlo_ng_SOURCES)
+DIST_SOURCES = $(farlo_ng_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -180,9 +181,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-farlodir = /usr/local/bin
-farlo_SOURCES = main.c crack.c htable.c algorithms/xavi.c algorithms/zyxel.c algorithms/comtrendwpa.c algorithms/dlink.c algorithms/smc.c algorithms/huawei.c algorithms/thomson.c algorithms/wlanlike.c patterns.c cbuffer.c wireless.c ciphers.c algorithms.c
-farlo_CPPFLAGS = `xml2-config --cflags`
+farlo_ngdir = /usr/local/bin
+farlo_ng_SOURCES = main.c crack.c htable.c algorithms/xavi.c algorithms/zyxel.c algorithms/comtrendwpa.c algorithms/dlink.c algorithms/smc.c algorithms/huawei.c algorithms/thomson.c algorithms/wlanlike.c patterns.c cbuffer.c wireless.c ciphers.c algorithms.c
+farlo_ng_CPPFLAGS = `xml2-config --cflags`
 all: all-am
 
 .SUFFIXES:
@@ -217,12 +218,12 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-farloPROGRAMS: $(farlo_PROGRAMS)
+install-farlo_ngPROGRAMS: $(farlo_ng_PROGRAMS)
 	@$(NORMAL_INSTALL)
-	@list='$(farlo_PROGRAMS)'; test -n "$(farlodir)" || list=; \
+	@list='$(farlo_ng_PROGRAMS)'; test -n "$(farlo_ngdir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(farlodir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(farlodir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(farlo_ngdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(farlo_ngdir)" || exit 1; \
 	fi; \
 	for p in $$list; do echo "$$p $$p"; done | \
 	sed 's/$(EXEEXT)$$//' | \
@@ -240,79 +241,79 @@ install-farloPROGRAMS: $(farlo_PROGRAMS)
 	while read type dir files; do \
 	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
 	    test -z "$$files" || { \
-	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(farlodir)$$dir'"; \
-	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(farlodir)$$dir" || exit $$?; \
+	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(farlo_ngdir)$$dir'"; \
+	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(farlo_ngdir)$$dir" || exit $$?; \
 	    } \
 	; done
 
-uninstall-farloPROGRAMS:
+uninstall-farlo_ngPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(farlo_PROGRAMS)'; test -n "$(farlodir)" || list=; \
+	@list='$(farlo_ng_PROGRAMS)'; test -n "$(farlo_ngdir)" || list=; \
 	files=`for p in $$list; do echo "$$p"; done | \
 	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
 	      -e 's/$$/$(EXEEXT)/' `; \
 	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(farlodir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(farlodir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(farlo_ngdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(farlo_ngdir)" && rm -f $$files
 
-clean-farloPROGRAMS:
-	-test -z "$(farlo_PROGRAMS)" || rm -f $(farlo_PROGRAMS)
+clean-farlo_ngPROGRAMS:
+	-test -z "$(farlo_ng_PROGRAMS)" || rm -f $(farlo_ng_PROGRAMS)
 algorithms/$(am__dirstamp):
 	@$(MKDIR_P) algorithms
 	@: > algorithms/$(am__dirstamp)
 algorithms/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) algorithms/$(DEPDIR)
 	@: > algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-xavi.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-xavi.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-zyxel.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-zyxel.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-comtrendwpa.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-comtrendwpa.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-dlink.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-dlink.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-smc.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-smc.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-huawei.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-huawei.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-thomson.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-thomson.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-algorithms/farlo-wlanlike.$(OBJEXT): algorithms/$(am__dirstamp) \
+algorithms/farlo_ng-wlanlike.$(OBJEXT): algorithms/$(am__dirstamp) \
 	algorithms/$(DEPDIR)/$(am__dirstamp)
-farlo$(EXEEXT): $(farlo_OBJECTS) $(farlo_DEPENDENCIES) $(EXTRA_farlo_DEPENDENCIES) 
-	@rm -f farlo$(EXEEXT)
-	$(LINK) $(farlo_OBJECTS) $(farlo_LDADD) $(LIBS)
+farlo-ng$(EXEEXT): $(farlo_ng_OBJECTS) $(farlo_ng_DEPENDENCIES) $(EXTRA_farlo_ng_DEPENDENCIES) 
+	@rm -f farlo-ng$(EXEEXT)
+	$(LINK) $(farlo_ng_OBJECTS) $(farlo_ng_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f algorithms/farlo-comtrendwpa.$(OBJEXT)
-	-rm -f algorithms/farlo-dlink.$(OBJEXT)
-	-rm -f algorithms/farlo-huawei.$(OBJEXT)
-	-rm -f algorithms/farlo-smc.$(OBJEXT)
-	-rm -f algorithms/farlo-thomson.$(OBJEXT)
-	-rm -f algorithms/farlo-wlanlike.$(OBJEXT)
-	-rm -f algorithms/farlo-xavi.$(OBJEXT)
-	-rm -f algorithms/farlo-zyxel.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-comtrendwpa.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-dlink.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-huawei.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-smc.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-thomson.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-wlanlike.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-xavi.$(OBJEXT)
+	-rm -f algorithms/farlo_ng-zyxel.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-algorithms.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-cbuffer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-ciphers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-crack.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-htable.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-patterns.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo-wireless.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-comtrendwpa.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-dlink.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-huawei.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-smc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-thomson.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-wlanlike.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-xavi.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo-zyxel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-algorithms.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-cbuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-ciphers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-crack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-htable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-patterns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/farlo_ng-wireless.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-dlink.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-huawei.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-smc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-thomson.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-wlanlike.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-xavi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@algorithms/$(DEPDIR)/farlo_ng-zyxel.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -330,229 +331,229 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-farlo-main.o: main.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-main.o -MD -MP -MF $(DEPDIR)/farlo-main.Tpo -c -o farlo-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-main.Tpo $(DEPDIR)/farlo-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='farlo-main.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-main.o: main.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-main.o -MD -MP -MF $(DEPDIR)/farlo_ng-main.Tpo -c -o farlo_ng-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-main.Tpo $(DEPDIR)/farlo_ng-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='farlo_ng-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
 
-farlo-main.obj: main.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-main.obj -MD -MP -MF $(DEPDIR)/farlo-main.Tpo -c -o farlo-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-main.Tpo $(DEPDIR)/farlo-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='farlo-main.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-main.obj: main.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-main.obj -MD -MP -MF $(DEPDIR)/farlo_ng-main.Tpo -c -o farlo_ng-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-main.Tpo $(DEPDIR)/farlo_ng-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='farlo_ng-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
-farlo-crack.o: crack.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-crack.o -MD -MP -MF $(DEPDIR)/farlo-crack.Tpo -c -o farlo-crack.o `test -f 'crack.c' || echo '$(srcdir)/'`crack.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-crack.Tpo $(DEPDIR)/farlo-crack.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='crack.c' object='farlo-crack.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-crack.o: crack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-crack.o -MD -MP -MF $(DEPDIR)/farlo_ng-crack.Tpo -c -o farlo_ng-crack.o `test -f 'crack.c' || echo '$(srcdir)/'`crack.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-crack.Tpo $(DEPDIR)/farlo_ng-crack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='crack.c' object='farlo_ng-crack.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-crack.o `test -f 'crack.c' || echo '$(srcdir)/'`crack.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-crack.o `test -f 'crack.c' || echo '$(srcdir)/'`crack.c
 
-farlo-crack.obj: crack.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-crack.obj -MD -MP -MF $(DEPDIR)/farlo-crack.Tpo -c -o farlo-crack.obj `if test -f 'crack.c'; then $(CYGPATH_W) 'crack.c'; else $(CYGPATH_W) '$(srcdir)/crack.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-crack.Tpo $(DEPDIR)/farlo-crack.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='crack.c' object='farlo-crack.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-crack.obj: crack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-crack.obj -MD -MP -MF $(DEPDIR)/farlo_ng-crack.Tpo -c -o farlo_ng-crack.obj `if test -f 'crack.c'; then $(CYGPATH_W) 'crack.c'; else $(CYGPATH_W) '$(srcdir)/crack.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-crack.Tpo $(DEPDIR)/farlo_ng-crack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='crack.c' object='farlo_ng-crack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-crack.obj `if test -f 'crack.c'; then $(CYGPATH_W) 'crack.c'; else $(CYGPATH_W) '$(srcdir)/crack.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-crack.obj `if test -f 'crack.c'; then $(CYGPATH_W) 'crack.c'; else $(CYGPATH_W) '$(srcdir)/crack.c'; fi`
 
-farlo-htable.o: htable.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-htable.o -MD -MP -MF $(DEPDIR)/farlo-htable.Tpo -c -o farlo-htable.o `test -f 'htable.c' || echo '$(srcdir)/'`htable.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-htable.Tpo $(DEPDIR)/farlo-htable.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='htable.c' object='farlo-htable.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-htable.o: htable.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-htable.o -MD -MP -MF $(DEPDIR)/farlo_ng-htable.Tpo -c -o farlo_ng-htable.o `test -f 'htable.c' || echo '$(srcdir)/'`htable.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-htable.Tpo $(DEPDIR)/farlo_ng-htable.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='htable.c' object='farlo_ng-htable.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-htable.o `test -f 'htable.c' || echo '$(srcdir)/'`htable.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-htable.o `test -f 'htable.c' || echo '$(srcdir)/'`htable.c
 
-farlo-htable.obj: htable.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-htable.obj -MD -MP -MF $(DEPDIR)/farlo-htable.Tpo -c -o farlo-htable.obj `if test -f 'htable.c'; then $(CYGPATH_W) 'htable.c'; else $(CYGPATH_W) '$(srcdir)/htable.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-htable.Tpo $(DEPDIR)/farlo-htable.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='htable.c' object='farlo-htable.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-htable.obj: htable.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-htable.obj -MD -MP -MF $(DEPDIR)/farlo_ng-htable.Tpo -c -o farlo_ng-htable.obj `if test -f 'htable.c'; then $(CYGPATH_W) 'htable.c'; else $(CYGPATH_W) '$(srcdir)/htable.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-htable.Tpo $(DEPDIR)/farlo_ng-htable.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='htable.c' object='farlo_ng-htable.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-htable.obj `if test -f 'htable.c'; then $(CYGPATH_W) 'htable.c'; else $(CYGPATH_W) '$(srcdir)/htable.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-htable.obj `if test -f 'htable.c'; then $(CYGPATH_W) 'htable.c'; else $(CYGPATH_W) '$(srcdir)/htable.c'; fi`
 
-algorithms/farlo-xavi.o: algorithms/xavi.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-xavi.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-xavi.Tpo -c -o algorithms/farlo-xavi.o `test -f 'algorithms/xavi.c' || echo '$(srcdir)/'`algorithms/xavi.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-xavi.Tpo algorithms/$(DEPDIR)/farlo-xavi.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/xavi.c' object='algorithms/farlo-xavi.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-xavi.o: algorithms/xavi.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-xavi.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-xavi.Tpo -c -o algorithms/farlo_ng-xavi.o `test -f 'algorithms/xavi.c' || echo '$(srcdir)/'`algorithms/xavi.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-xavi.Tpo algorithms/$(DEPDIR)/farlo_ng-xavi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/xavi.c' object='algorithms/farlo_ng-xavi.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-xavi.o `test -f 'algorithms/xavi.c' || echo '$(srcdir)/'`algorithms/xavi.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-xavi.o `test -f 'algorithms/xavi.c' || echo '$(srcdir)/'`algorithms/xavi.c
 
-algorithms/farlo-xavi.obj: algorithms/xavi.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-xavi.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-xavi.Tpo -c -o algorithms/farlo-xavi.obj `if test -f 'algorithms/xavi.c'; then $(CYGPATH_W) 'algorithms/xavi.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/xavi.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-xavi.Tpo algorithms/$(DEPDIR)/farlo-xavi.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/xavi.c' object='algorithms/farlo-xavi.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-xavi.obj: algorithms/xavi.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-xavi.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-xavi.Tpo -c -o algorithms/farlo_ng-xavi.obj `if test -f 'algorithms/xavi.c'; then $(CYGPATH_W) 'algorithms/xavi.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/xavi.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-xavi.Tpo algorithms/$(DEPDIR)/farlo_ng-xavi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/xavi.c' object='algorithms/farlo_ng-xavi.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-xavi.obj `if test -f 'algorithms/xavi.c'; then $(CYGPATH_W) 'algorithms/xavi.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/xavi.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-xavi.obj `if test -f 'algorithms/xavi.c'; then $(CYGPATH_W) 'algorithms/xavi.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/xavi.c'; fi`
 
-algorithms/farlo-zyxel.o: algorithms/zyxel.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-zyxel.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-zyxel.Tpo -c -o algorithms/farlo-zyxel.o `test -f 'algorithms/zyxel.c' || echo '$(srcdir)/'`algorithms/zyxel.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-zyxel.Tpo algorithms/$(DEPDIR)/farlo-zyxel.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/zyxel.c' object='algorithms/farlo-zyxel.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-zyxel.o: algorithms/zyxel.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-zyxel.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-zyxel.Tpo -c -o algorithms/farlo_ng-zyxel.o `test -f 'algorithms/zyxel.c' || echo '$(srcdir)/'`algorithms/zyxel.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-zyxel.Tpo algorithms/$(DEPDIR)/farlo_ng-zyxel.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/zyxel.c' object='algorithms/farlo_ng-zyxel.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-zyxel.o `test -f 'algorithms/zyxel.c' || echo '$(srcdir)/'`algorithms/zyxel.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-zyxel.o `test -f 'algorithms/zyxel.c' || echo '$(srcdir)/'`algorithms/zyxel.c
 
-algorithms/farlo-zyxel.obj: algorithms/zyxel.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-zyxel.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-zyxel.Tpo -c -o algorithms/farlo-zyxel.obj `if test -f 'algorithms/zyxel.c'; then $(CYGPATH_W) 'algorithms/zyxel.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/zyxel.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-zyxel.Tpo algorithms/$(DEPDIR)/farlo-zyxel.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/zyxel.c' object='algorithms/farlo-zyxel.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-zyxel.obj: algorithms/zyxel.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-zyxel.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-zyxel.Tpo -c -o algorithms/farlo_ng-zyxel.obj `if test -f 'algorithms/zyxel.c'; then $(CYGPATH_W) 'algorithms/zyxel.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/zyxel.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-zyxel.Tpo algorithms/$(DEPDIR)/farlo_ng-zyxel.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/zyxel.c' object='algorithms/farlo_ng-zyxel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-zyxel.obj `if test -f 'algorithms/zyxel.c'; then $(CYGPATH_W) 'algorithms/zyxel.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/zyxel.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-zyxel.obj `if test -f 'algorithms/zyxel.c'; then $(CYGPATH_W) 'algorithms/zyxel.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/zyxel.c'; fi`
 
-algorithms/farlo-comtrendwpa.o: algorithms/comtrendwpa.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-comtrendwpa.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-comtrendwpa.Tpo -c -o algorithms/farlo-comtrendwpa.o `test -f 'algorithms/comtrendwpa.c' || echo '$(srcdir)/'`algorithms/comtrendwpa.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-comtrendwpa.Tpo algorithms/$(DEPDIR)/farlo-comtrendwpa.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/comtrendwpa.c' object='algorithms/farlo-comtrendwpa.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-comtrendwpa.o: algorithms/comtrendwpa.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-comtrendwpa.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Tpo -c -o algorithms/farlo_ng-comtrendwpa.o `test -f 'algorithms/comtrendwpa.c' || echo '$(srcdir)/'`algorithms/comtrendwpa.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Tpo algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/comtrendwpa.c' object='algorithms/farlo_ng-comtrendwpa.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-comtrendwpa.o `test -f 'algorithms/comtrendwpa.c' || echo '$(srcdir)/'`algorithms/comtrendwpa.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-comtrendwpa.o `test -f 'algorithms/comtrendwpa.c' || echo '$(srcdir)/'`algorithms/comtrendwpa.c
 
-algorithms/farlo-comtrendwpa.obj: algorithms/comtrendwpa.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-comtrendwpa.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-comtrendwpa.Tpo -c -o algorithms/farlo-comtrendwpa.obj `if test -f 'algorithms/comtrendwpa.c'; then $(CYGPATH_W) 'algorithms/comtrendwpa.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/comtrendwpa.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-comtrendwpa.Tpo algorithms/$(DEPDIR)/farlo-comtrendwpa.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/comtrendwpa.c' object='algorithms/farlo-comtrendwpa.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-comtrendwpa.obj: algorithms/comtrendwpa.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-comtrendwpa.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Tpo -c -o algorithms/farlo_ng-comtrendwpa.obj `if test -f 'algorithms/comtrendwpa.c'; then $(CYGPATH_W) 'algorithms/comtrendwpa.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/comtrendwpa.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Tpo algorithms/$(DEPDIR)/farlo_ng-comtrendwpa.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/comtrendwpa.c' object='algorithms/farlo_ng-comtrendwpa.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-comtrendwpa.obj `if test -f 'algorithms/comtrendwpa.c'; then $(CYGPATH_W) 'algorithms/comtrendwpa.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/comtrendwpa.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-comtrendwpa.obj `if test -f 'algorithms/comtrendwpa.c'; then $(CYGPATH_W) 'algorithms/comtrendwpa.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/comtrendwpa.c'; fi`
 
-algorithms/farlo-dlink.o: algorithms/dlink.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-dlink.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-dlink.Tpo -c -o algorithms/farlo-dlink.o `test -f 'algorithms/dlink.c' || echo '$(srcdir)/'`algorithms/dlink.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-dlink.Tpo algorithms/$(DEPDIR)/farlo-dlink.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/dlink.c' object='algorithms/farlo-dlink.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-dlink.o: algorithms/dlink.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-dlink.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-dlink.Tpo -c -o algorithms/farlo_ng-dlink.o `test -f 'algorithms/dlink.c' || echo '$(srcdir)/'`algorithms/dlink.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-dlink.Tpo algorithms/$(DEPDIR)/farlo_ng-dlink.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/dlink.c' object='algorithms/farlo_ng-dlink.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-dlink.o `test -f 'algorithms/dlink.c' || echo '$(srcdir)/'`algorithms/dlink.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-dlink.o `test -f 'algorithms/dlink.c' || echo '$(srcdir)/'`algorithms/dlink.c
 
-algorithms/farlo-dlink.obj: algorithms/dlink.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-dlink.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-dlink.Tpo -c -o algorithms/farlo-dlink.obj `if test -f 'algorithms/dlink.c'; then $(CYGPATH_W) 'algorithms/dlink.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/dlink.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-dlink.Tpo algorithms/$(DEPDIR)/farlo-dlink.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/dlink.c' object='algorithms/farlo-dlink.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-dlink.obj: algorithms/dlink.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-dlink.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-dlink.Tpo -c -o algorithms/farlo_ng-dlink.obj `if test -f 'algorithms/dlink.c'; then $(CYGPATH_W) 'algorithms/dlink.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/dlink.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-dlink.Tpo algorithms/$(DEPDIR)/farlo_ng-dlink.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/dlink.c' object='algorithms/farlo_ng-dlink.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-dlink.obj `if test -f 'algorithms/dlink.c'; then $(CYGPATH_W) 'algorithms/dlink.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/dlink.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-dlink.obj `if test -f 'algorithms/dlink.c'; then $(CYGPATH_W) 'algorithms/dlink.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/dlink.c'; fi`
 
-algorithms/farlo-smc.o: algorithms/smc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-smc.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-smc.Tpo -c -o algorithms/farlo-smc.o `test -f 'algorithms/smc.c' || echo '$(srcdir)/'`algorithms/smc.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-smc.Tpo algorithms/$(DEPDIR)/farlo-smc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/smc.c' object='algorithms/farlo-smc.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-smc.o: algorithms/smc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-smc.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-smc.Tpo -c -o algorithms/farlo_ng-smc.o `test -f 'algorithms/smc.c' || echo '$(srcdir)/'`algorithms/smc.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-smc.Tpo algorithms/$(DEPDIR)/farlo_ng-smc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/smc.c' object='algorithms/farlo_ng-smc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-smc.o `test -f 'algorithms/smc.c' || echo '$(srcdir)/'`algorithms/smc.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-smc.o `test -f 'algorithms/smc.c' || echo '$(srcdir)/'`algorithms/smc.c
 
-algorithms/farlo-smc.obj: algorithms/smc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-smc.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-smc.Tpo -c -o algorithms/farlo-smc.obj `if test -f 'algorithms/smc.c'; then $(CYGPATH_W) 'algorithms/smc.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/smc.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-smc.Tpo algorithms/$(DEPDIR)/farlo-smc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/smc.c' object='algorithms/farlo-smc.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-smc.obj: algorithms/smc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-smc.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-smc.Tpo -c -o algorithms/farlo_ng-smc.obj `if test -f 'algorithms/smc.c'; then $(CYGPATH_W) 'algorithms/smc.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/smc.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-smc.Tpo algorithms/$(DEPDIR)/farlo_ng-smc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/smc.c' object='algorithms/farlo_ng-smc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-smc.obj `if test -f 'algorithms/smc.c'; then $(CYGPATH_W) 'algorithms/smc.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/smc.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-smc.obj `if test -f 'algorithms/smc.c'; then $(CYGPATH_W) 'algorithms/smc.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/smc.c'; fi`
 
-algorithms/farlo-huawei.o: algorithms/huawei.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-huawei.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-huawei.Tpo -c -o algorithms/farlo-huawei.o `test -f 'algorithms/huawei.c' || echo '$(srcdir)/'`algorithms/huawei.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-huawei.Tpo algorithms/$(DEPDIR)/farlo-huawei.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/huawei.c' object='algorithms/farlo-huawei.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-huawei.o: algorithms/huawei.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-huawei.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-huawei.Tpo -c -o algorithms/farlo_ng-huawei.o `test -f 'algorithms/huawei.c' || echo '$(srcdir)/'`algorithms/huawei.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-huawei.Tpo algorithms/$(DEPDIR)/farlo_ng-huawei.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/huawei.c' object='algorithms/farlo_ng-huawei.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-huawei.o `test -f 'algorithms/huawei.c' || echo '$(srcdir)/'`algorithms/huawei.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-huawei.o `test -f 'algorithms/huawei.c' || echo '$(srcdir)/'`algorithms/huawei.c
 
-algorithms/farlo-huawei.obj: algorithms/huawei.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-huawei.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-huawei.Tpo -c -o algorithms/farlo-huawei.obj `if test -f 'algorithms/huawei.c'; then $(CYGPATH_W) 'algorithms/huawei.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/huawei.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-huawei.Tpo algorithms/$(DEPDIR)/farlo-huawei.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/huawei.c' object='algorithms/farlo-huawei.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-huawei.obj: algorithms/huawei.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-huawei.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-huawei.Tpo -c -o algorithms/farlo_ng-huawei.obj `if test -f 'algorithms/huawei.c'; then $(CYGPATH_W) 'algorithms/huawei.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/huawei.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-huawei.Tpo algorithms/$(DEPDIR)/farlo_ng-huawei.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/huawei.c' object='algorithms/farlo_ng-huawei.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-huawei.obj `if test -f 'algorithms/huawei.c'; then $(CYGPATH_W) 'algorithms/huawei.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/huawei.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-huawei.obj `if test -f 'algorithms/huawei.c'; then $(CYGPATH_W) 'algorithms/huawei.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/huawei.c'; fi`
 
-algorithms/farlo-thomson.o: algorithms/thomson.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-thomson.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-thomson.Tpo -c -o algorithms/farlo-thomson.o `test -f 'algorithms/thomson.c' || echo '$(srcdir)/'`algorithms/thomson.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-thomson.Tpo algorithms/$(DEPDIR)/farlo-thomson.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/thomson.c' object='algorithms/farlo-thomson.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-thomson.o: algorithms/thomson.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-thomson.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-thomson.Tpo -c -o algorithms/farlo_ng-thomson.o `test -f 'algorithms/thomson.c' || echo '$(srcdir)/'`algorithms/thomson.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-thomson.Tpo algorithms/$(DEPDIR)/farlo_ng-thomson.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/thomson.c' object='algorithms/farlo_ng-thomson.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-thomson.o `test -f 'algorithms/thomson.c' || echo '$(srcdir)/'`algorithms/thomson.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-thomson.o `test -f 'algorithms/thomson.c' || echo '$(srcdir)/'`algorithms/thomson.c
 
-algorithms/farlo-thomson.obj: algorithms/thomson.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-thomson.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-thomson.Tpo -c -o algorithms/farlo-thomson.obj `if test -f 'algorithms/thomson.c'; then $(CYGPATH_W) 'algorithms/thomson.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/thomson.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-thomson.Tpo algorithms/$(DEPDIR)/farlo-thomson.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/thomson.c' object='algorithms/farlo-thomson.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-thomson.obj: algorithms/thomson.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-thomson.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-thomson.Tpo -c -o algorithms/farlo_ng-thomson.obj `if test -f 'algorithms/thomson.c'; then $(CYGPATH_W) 'algorithms/thomson.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/thomson.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-thomson.Tpo algorithms/$(DEPDIR)/farlo_ng-thomson.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/thomson.c' object='algorithms/farlo_ng-thomson.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-thomson.obj `if test -f 'algorithms/thomson.c'; then $(CYGPATH_W) 'algorithms/thomson.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/thomson.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-thomson.obj `if test -f 'algorithms/thomson.c'; then $(CYGPATH_W) 'algorithms/thomson.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/thomson.c'; fi`
 
-algorithms/farlo-wlanlike.o: algorithms/wlanlike.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-wlanlike.o -MD -MP -MF algorithms/$(DEPDIR)/farlo-wlanlike.Tpo -c -o algorithms/farlo-wlanlike.o `test -f 'algorithms/wlanlike.c' || echo '$(srcdir)/'`algorithms/wlanlike.c
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-wlanlike.Tpo algorithms/$(DEPDIR)/farlo-wlanlike.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/wlanlike.c' object='algorithms/farlo-wlanlike.o' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-wlanlike.o: algorithms/wlanlike.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-wlanlike.o -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-wlanlike.Tpo -c -o algorithms/farlo_ng-wlanlike.o `test -f 'algorithms/wlanlike.c' || echo '$(srcdir)/'`algorithms/wlanlike.c
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-wlanlike.Tpo algorithms/$(DEPDIR)/farlo_ng-wlanlike.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/wlanlike.c' object='algorithms/farlo_ng-wlanlike.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-wlanlike.o `test -f 'algorithms/wlanlike.c' || echo '$(srcdir)/'`algorithms/wlanlike.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-wlanlike.o `test -f 'algorithms/wlanlike.c' || echo '$(srcdir)/'`algorithms/wlanlike.c
 
-algorithms/farlo-wlanlike.obj: algorithms/wlanlike.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo-wlanlike.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo-wlanlike.Tpo -c -o algorithms/farlo-wlanlike.obj `if test -f 'algorithms/wlanlike.c'; then $(CYGPATH_W) 'algorithms/wlanlike.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/wlanlike.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo-wlanlike.Tpo algorithms/$(DEPDIR)/farlo-wlanlike.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/wlanlike.c' object='algorithms/farlo-wlanlike.obj' libtool=no @AMDEPBACKSLASH@
+algorithms/farlo_ng-wlanlike.obj: algorithms/wlanlike.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT algorithms/farlo_ng-wlanlike.obj -MD -MP -MF algorithms/$(DEPDIR)/farlo_ng-wlanlike.Tpo -c -o algorithms/farlo_ng-wlanlike.obj `if test -f 'algorithms/wlanlike.c'; then $(CYGPATH_W) 'algorithms/wlanlike.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/wlanlike.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) algorithms/$(DEPDIR)/farlo_ng-wlanlike.Tpo algorithms/$(DEPDIR)/farlo_ng-wlanlike.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms/wlanlike.c' object='algorithms/farlo_ng-wlanlike.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo-wlanlike.obj `if test -f 'algorithms/wlanlike.c'; then $(CYGPATH_W) 'algorithms/wlanlike.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/wlanlike.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o algorithms/farlo_ng-wlanlike.obj `if test -f 'algorithms/wlanlike.c'; then $(CYGPATH_W) 'algorithms/wlanlike.c'; else $(CYGPATH_W) '$(srcdir)/algorithms/wlanlike.c'; fi`
 
-farlo-patterns.o: patterns.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-patterns.o -MD -MP -MF $(DEPDIR)/farlo-patterns.Tpo -c -o farlo-patterns.o `test -f 'patterns.c' || echo '$(srcdir)/'`patterns.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-patterns.Tpo $(DEPDIR)/farlo-patterns.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='patterns.c' object='farlo-patterns.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-patterns.o: patterns.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-patterns.o -MD -MP -MF $(DEPDIR)/farlo_ng-patterns.Tpo -c -o farlo_ng-patterns.o `test -f 'patterns.c' || echo '$(srcdir)/'`patterns.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-patterns.Tpo $(DEPDIR)/farlo_ng-patterns.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='patterns.c' object='farlo_ng-patterns.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-patterns.o `test -f 'patterns.c' || echo '$(srcdir)/'`patterns.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-patterns.o `test -f 'patterns.c' || echo '$(srcdir)/'`patterns.c
 
-farlo-patterns.obj: patterns.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-patterns.obj -MD -MP -MF $(DEPDIR)/farlo-patterns.Tpo -c -o farlo-patterns.obj `if test -f 'patterns.c'; then $(CYGPATH_W) 'patterns.c'; else $(CYGPATH_W) '$(srcdir)/patterns.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-patterns.Tpo $(DEPDIR)/farlo-patterns.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='patterns.c' object='farlo-patterns.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-patterns.obj: patterns.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-patterns.obj -MD -MP -MF $(DEPDIR)/farlo_ng-patterns.Tpo -c -o farlo_ng-patterns.obj `if test -f 'patterns.c'; then $(CYGPATH_W) 'patterns.c'; else $(CYGPATH_W) '$(srcdir)/patterns.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-patterns.Tpo $(DEPDIR)/farlo_ng-patterns.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='patterns.c' object='farlo_ng-patterns.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-patterns.obj `if test -f 'patterns.c'; then $(CYGPATH_W) 'patterns.c'; else $(CYGPATH_W) '$(srcdir)/patterns.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-patterns.obj `if test -f 'patterns.c'; then $(CYGPATH_W) 'patterns.c'; else $(CYGPATH_W) '$(srcdir)/patterns.c'; fi`
 
-farlo-cbuffer.o: cbuffer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-cbuffer.o -MD -MP -MF $(DEPDIR)/farlo-cbuffer.Tpo -c -o farlo-cbuffer.o `test -f 'cbuffer.c' || echo '$(srcdir)/'`cbuffer.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-cbuffer.Tpo $(DEPDIR)/farlo-cbuffer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cbuffer.c' object='farlo-cbuffer.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-cbuffer.o: cbuffer.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-cbuffer.o -MD -MP -MF $(DEPDIR)/farlo_ng-cbuffer.Tpo -c -o farlo_ng-cbuffer.o `test -f 'cbuffer.c' || echo '$(srcdir)/'`cbuffer.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-cbuffer.Tpo $(DEPDIR)/farlo_ng-cbuffer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cbuffer.c' object='farlo_ng-cbuffer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-cbuffer.o `test -f 'cbuffer.c' || echo '$(srcdir)/'`cbuffer.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-cbuffer.o `test -f 'cbuffer.c' || echo '$(srcdir)/'`cbuffer.c
 
-farlo-cbuffer.obj: cbuffer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-cbuffer.obj -MD -MP -MF $(DEPDIR)/farlo-cbuffer.Tpo -c -o farlo-cbuffer.obj `if test -f 'cbuffer.c'; then $(CYGPATH_W) 'cbuffer.c'; else $(CYGPATH_W) '$(srcdir)/cbuffer.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-cbuffer.Tpo $(DEPDIR)/farlo-cbuffer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cbuffer.c' object='farlo-cbuffer.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-cbuffer.obj: cbuffer.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-cbuffer.obj -MD -MP -MF $(DEPDIR)/farlo_ng-cbuffer.Tpo -c -o farlo_ng-cbuffer.obj `if test -f 'cbuffer.c'; then $(CYGPATH_W) 'cbuffer.c'; else $(CYGPATH_W) '$(srcdir)/cbuffer.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-cbuffer.Tpo $(DEPDIR)/farlo_ng-cbuffer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cbuffer.c' object='farlo_ng-cbuffer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-cbuffer.obj `if test -f 'cbuffer.c'; then $(CYGPATH_W) 'cbuffer.c'; else $(CYGPATH_W) '$(srcdir)/cbuffer.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-cbuffer.obj `if test -f 'cbuffer.c'; then $(CYGPATH_W) 'cbuffer.c'; else $(CYGPATH_W) '$(srcdir)/cbuffer.c'; fi`
 
-farlo-wireless.o: wireless.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-wireless.o -MD -MP -MF $(DEPDIR)/farlo-wireless.Tpo -c -o farlo-wireless.o `test -f 'wireless.c' || echo '$(srcdir)/'`wireless.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-wireless.Tpo $(DEPDIR)/farlo-wireless.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='wireless.c' object='farlo-wireless.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-wireless.o: wireless.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-wireless.o -MD -MP -MF $(DEPDIR)/farlo_ng-wireless.Tpo -c -o farlo_ng-wireless.o `test -f 'wireless.c' || echo '$(srcdir)/'`wireless.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-wireless.Tpo $(DEPDIR)/farlo_ng-wireless.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='wireless.c' object='farlo_ng-wireless.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-wireless.o `test -f 'wireless.c' || echo '$(srcdir)/'`wireless.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-wireless.o `test -f 'wireless.c' || echo '$(srcdir)/'`wireless.c
 
-farlo-wireless.obj: wireless.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-wireless.obj -MD -MP -MF $(DEPDIR)/farlo-wireless.Tpo -c -o farlo-wireless.obj `if test -f 'wireless.c'; then $(CYGPATH_W) 'wireless.c'; else $(CYGPATH_W) '$(srcdir)/wireless.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-wireless.Tpo $(DEPDIR)/farlo-wireless.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='wireless.c' object='farlo-wireless.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-wireless.obj: wireless.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-wireless.obj -MD -MP -MF $(DEPDIR)/farlo_ng-wireless.Tpo -c -o farlo_ng-wireless.obj `if test -f 'wireless.c'; then $(CYGPATH_W) 'wireless.c'; else $(CYGPATH_W) '$(srcdir)/wireless.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-wireless.Tpo $(DEPDIR)/farlo_ng-wireless.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='wireless.c' object='farlo_ng-wireless.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-wireless.obj `if test -f 'wireless.c'; then $(CYGPATH_W) 'wireless.c'; else $(CYGPATH_W) '$(srcdir)/wireless.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-wireless.obj `if test -f 'wireless.c'; then $(CYGPATH_W) 'wireless.c'; else $(CYGPATH_W) '$(srcdir)/wireless.c'; fi`
 
-farlo-ciphers.o: ciphers.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-ciphers.o -MD -MP -MF $(DEPDIR)/farlo-ciphers.Tpo -c -o farlo-ciphers.o `test -f 'ciphers.c' || echo '$(srcdir)/'`ciphers.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-ciphers.Tpo $(DEPDIR)/farlo-ciphers.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ciphers.c' object='farlo-ciphers.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-ciphers.o: ciphers.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-ciphers.o -MD -MP -MF $(DEPDIR)/farlo_ng-ciphers.Tpo -c -o farlo_ng-ciphers.o `test -f 'ciphers.c' || echo '$(srcdir)/'`ciphers.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-ciphers.Tpo $(DEPDIR)/farlo_ng-ciphers.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ciphers.c' object='farlo_ng-ciphers.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-ciphers.o `test -f 'ciphers.c' || echo '$(srcdir)/'`ciphers.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-ciphers.o `test -f 'ciphers.c' || echo '$(srcdir)/'`ciphers.c
 
-farlo-ciphers.obj: ciphers.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-ciphers.obj -MD -MP -MF $(DEPDIR)/farlo-ciphers.Tpo -c -o farlo-ciphers.obj `if test -f 'ciphers.c'; then $(CYGPATH_W) 'ciphers.c'; else $(CYGPATH_W) '$(srcdir)/ciphers.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-ciphers.Tpo $(DEPDIR)/farlo-ciphers.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ciphers.c' object='farlo-ciphers.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-ciphers.obj: ciphers.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-ciphers.obj -MD -MP -MF $(DEPDIR)/farlo_ng-ciphers.Tpo -c -o farlo_ng-ciphers.obj `if test -f 'ciphers.c'; then $(CYGPATH_W) 'ciphers.c'; else $(CYGPATH_W) '$(srcdir)/ciphers.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-ciphers.Tpo $(DEPDIR)/farlo_ng-ciphers.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ciphers.c' object='farlo_ng-ciphers.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-ciphers.obj `if test -f 'ciphers.c'; then $(CYGPATH_W) 'ciphers.c'; else $(CYGPATH_W) '$(srcdir)/ciphers.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-ciphers.obj `if test -f 'ciphers.c'; then $(CYGPATH_W) 'ciphers.c'; else $(CYGPATH_W) '$(srcdir)/ciphers.c'; fi`
 
-farlo-algorithms.o: algorithms.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-algorithms.o -MD -MP -MF $(DEPDIR)/farlo-algorithms.Tpo -c -o farlo-algorithms.o `test -f 'algorithms.c' || echo '$(srcdir)/'`algorithms.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-algorithms.Tpo $(DEPDIR)/farlo-algorithms.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms.c' object='farlo-algorithms.o' libtool=no @AMDEPBACKSLASH@
+farlo_ng-algorithms.o: algorithms.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-algorithms.o -MD -MP -MF $(DEPDIR)/farlo_ng-algorithms.Tpo -c -o farlo_ng-algorithms.o `test -f 'algorithms.c' || echo '$(srcdir)/'`algorithms.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-algorithms.Tpo $(DEPDIR)/farlo_ng-algorithms.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms.c' object='farlo_ng-algorithms.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-algorithms.o `test -f 'algorithms.c' || echo '$(srcdir)/'`algorithms.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-algorithms.o `test -f 'algorithms.c' || echo '$(srcdir)/'`algorithms.c
 
-farlo-algorithms.obj: algorithms.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo-algorithms.obj -MD -MP -MF $(DEPDIR)/farlo-algorithms.Tpo -c -o farlo-algorithms.obj `if test -f 'algorithms.c'; then $(CYGPATH_W) 'algorithms.c'; else $(CYGPATH_W) '$(srcdir)/algorithms.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo-algorithms.Tpo $(DEPDIR)/farlo-algorithms.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms.c' object='farlo-algorithms.obj' libtool=no @AMDEPBACKSLASH@
+farlo_ng-algorithms.obj: algorithms.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT farlo_ng-algorithms.obj -MD -MP -MF $(DEPDIR)/farlo_ng-algorithms.Tpo -c -o farlo_ng-algorithms.obj `if test -f 'algorithms.c'; then $(CYGPATH_W) 'algorithms.c'; else $(CYGPATH_W) '$(srcdir)/algorithms.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/farlo_ng-algorithms.Tpo $(DEPDIR)/farlo_ng-algorithms.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='algorithms.c' object='farlo_ng-algorithms.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo-algorithms.obj `if test -f 'algorithms.c'; then $(CYGPATH_W) 'algorithms.c'; else $(CYGPATH_W) '$(srcdir)/algorithms.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(farlo_ng_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o farlo_ng-algorithms.obj `if test -f 'algorithms.c'; then $(CYGPATH_W) 'algorithms.c'; else $(CYGPATH_W) '$(srcdir)/algorithms.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -640,7 +641,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
-	for dir in "$(DESTDIR)$(farlodir)"; do \
+	for dir in "$(DESTDIR)$(farlo_ngdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -677,7 +678,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-farloPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-farlo_ngPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR) algorithms/$(DEPDIR)
@@ -697,7 +698,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-farloPROGRAMS
+install-data-am: install-farlo_ngPROGRAMS
 
 install-dvi: install-dvi-am
 
@@ -742,22 +743,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-farloPROGRAMS
+uninstall-am: uninstall-farlo_ngPROGRAMS
 
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean \
-	clean-farloPROGRAMS clean-generic ctags distclean \
+	clean-farlo_ngPROGRAMS clean-generic ctags distclean \
 	distclean-compile distclean-generic distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-farloPROGRAMS \
+	install-exec install-exec-am install-farlo_ngPROGRAMS \
 	install-html install-html-am install-info install-info-am \
 	install-man install-pdf install-pdf-am install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
-	ps ps-am tags uninstall uninstall-am uninstall-farloPROGRAMS
+	ps ps-am tags uninstall uninstall-am \
+	uninstall-farlo_ngPROGRAMS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

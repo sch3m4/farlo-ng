@@ -234,7 +234,7 @@ static void crack_network ( struct wnetwork *net )
         fprintf ( stderr , "\n[F] Network %s (%s) cracked!\n\t- Password: %s\n\t- IP:       %s\n\t- Network:  %s/%d\n\t- Elapsed time: %li min %li sec %li msec\n" , net->essid , net->bssid , net->pwd.passwd , net->ip , net->network , net->cidr , min , sec , msec);
     }
     else
-        fprintf ( stderr , "\n[F] Network %s (%s) password not found! :-(\n" , net->essid , net->bssid );
+        fprintf ( stderr , "\n[NF] Network %s (%s) password not found! :-(\n" , net->essid , net->bssid );
 
     return;
 }

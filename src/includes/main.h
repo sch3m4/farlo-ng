@@ -69,7 +69,8 @@ typedef struct
     unsigned short  supported;
     int             dicfd;
     /* channel hopping */
-    unsigned short  channels[MAX_CHANNELS]; //channel list
+    unsigned short	hopping;
+    unsigned short  channels[MAX_CHANNELS]; //channels list
     unsigned long   delay;
     pthread_t       hoptid;
 
