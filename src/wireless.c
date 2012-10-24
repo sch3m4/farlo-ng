@@ -42,31 +42,6 @@
 #include <netinet/ether.h>
 #include <linux/wireless.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <signal.h>
-#include <pthread.h>
-#include <pcap.h>
-#include <sys/types.h>
-#include <netinet/if_ether.h>
-#include <netinet/ether.h>
-#include <sqlite3.h>
-#include <regex.h>
-#include <linux/wireless.h>
-#include <sys/ioctl.h>
-#include <netinet/in.h>
-
-#include <sys/ioctl.h>
-#include <unistd.h>
-
 #include "includes/main.h"
 #include "includes/wireless.h"
 #include "includes/htable.h"
