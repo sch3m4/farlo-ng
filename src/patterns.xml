@@ -44,8 +44,8 @@ Example of invalid network pattern:
 	<network bssid="^00:(03:C9|16:38|19:15|C3:DA|30:DA|03:DA).*" encryption="wep" algorithm="COMTREND_CT_535" />
 	<network bssid="^00:1D:20.*" encryption="wep" algorithm="COMTREND_AR_5381U" />
 	<network bssid="^00:1A:2B.*" encryption="wep" algorithm="COMTREND_CT_536T" />
-	<network bssid="^(64:68:0C|00:1D:20|00:23:F8|00:1B:20|00:30:DA).*" encrypt="(wpa|wpa2)" algorithm="COMTREND_WPAMAC" />
-	<network bssid="^(64:68:0C|00:1A:2B).*" encrypt="(wpa|wpa2)" algorithm="COMTREND_WPASSID" />
+	<network bssid="^(64:68:0C|00:1D:20|00:23:F8|00:1B:20|00:30:DA).*" encryption="(wpa|wpa2)" algorithm="COMTREND_WPAMAC" />
+	<network bssid="^(64:68:0C|00:1A:2B).*" encryption="(wpa|wpa2)" algorithm="COMTREND_WPASSID" />
 
 	# ZCom
 	<network bssid="^00:(60:B3|A0:C5).*" encryption="wep" algorithm="ZCOM_GENERIC" />
