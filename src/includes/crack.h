@@ -60,5 +60,8 @@ struct crackdata
 void init_crackqueue();
 void finish_crackqueue();
 void add_network_tocrack ( struct wnetwork *net );
+int crack_count ();
+void wait_crack_queue();
+unsigned short crack_queue_busy();
 
 #endif /* __FARLO_NG_CRACK_H__ */

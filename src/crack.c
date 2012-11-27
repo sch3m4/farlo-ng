@@ -63,9 +63,10 @@ typedef struct
     struct lock_access  lock;
     sem_t               got;
     pthread_t           cracktid;
+    pthread_mutex_t		busy;
 } crackqueue_t , *pcrackqueue_t;
 
-crackqueue_t cqueue;
+static crackqueue_t cqueue;
 
 static char *read_line ( int fd , unsigned short *finish )
 {
@@ -227,7 +228,7 @@ static void crack_network ( struct wnetwork *net )
     net->pwd.inprogress = 0;
 
     if ( net->pwd.path[0] != 0 )
-        fprintf ( stderr , "\n[C] Passwords dictionary created for network %s (%s)\n\t- Path: %s\n" , net->essid , net->bssid , net->pwd.path );
+        fprintf ( stderr , "\n[C] Passwords dictionary created for network %s (%s)\n\t- Path: %s (the last one is the default password)\n" , net->essid , net->bssid , net->pwd.path );
     else if ( net->pwd.found )
     {
         get_netinfo ( net->pwd.decrypted , net->pwd.declen , net );
@@ -239,17 +240,28 @@ static void crack_network ( struct wnetwork *net )
     return;
 }
 
-void *crack_thread ( void *p )
+static void *crack_thread ( void *p )
 {
     pcqueue_t       item;
+    int				ret;
     struct wnetwork *net;
+    struct timespec to;
 
     pthread_setcancelstate ( PTHREAD_CANCEL_ENABLE, NULL );
     pthread_setcanceltype ( PTHREAD_CANCEL_DEFERRED, NULL );
 
     while (1)
     {
-        sem_wait ( &cqueue.got );
+    	pthread_testcancel();
+
+    	to.tv_nsec = 0;
+    	to.tv_sec = 2;
+        while((ret=sem_timedwait(&cqueue.got,(const struct timespec*)&to)) < 0 && errno == EINTR)
+        	continue;
+
+        if ( ret < 0 )
+        	continue;
+
         threads_lock(&cqueue.lock);
         item = cqueue.first;
         cqueue.first = item->next;
@@ -270,7 +282,10 @@ void *crack_thread ( void *p )
 
         crack_network(net);
 
-        pthread_testcancel();
+        threads_lock(&cqueue.lock);
+        if ( !cqueue.first )
+        	pthread_mutex_unlock ( &cqueue.busy );
+        threads_unlock(&cqueue.lock);
     }
 
     return 0;
@@ -281,6 +296,8 @@ void add_network_tocrack ( struct wnetwork *net )
     pcqueue_t item;
 
     SAFE_CALLOC ( item , 1 , sizeof ( cqueue_t) );
+
+    pthread_mutex_trylock ( &cqueue.busy );
 
     item->net = net;
 
@@ -305,6 +322,7 @@ void init_crackqueue()
     memset ( &cqueue , 0 , sizeof ( crackqueue_t ) );
     threads_init_lock(&cqueue.lock);
     sem_init ( &cqueue.got , 0 , 0 );
+    pthread_mutex_init ( &cqueue.busy , 0 );
     pthread_create( &cqueue.cracktid , 0 , crack_thread, 0 );
 }
 
@@ -321,5 +339,34 @@ void finish_crackqueue()
         SAFE_FREE ( item );
     }
 
+    sem_destroy ( &cqueue.got );
+    pthread_mutex_destroy ( &cqueue.busy );
     threads_free_lock(&cqueue.lock);
+}
+
+int crack_count ()
+{
+	int val = 0;
+
+	sem_getvalue ( &cqueue.got , &val );
+
+	return val;
+}
+
+void wait_crack_queue()
+{
+	pthread_mutex_lock ( &cqueue.busy );
+	pthread_mutex_unlock ( &cqueue.busy );
+}
+
+unsigned short crack_queue_busy()
+{
+	unsigned short ret = 0;
+
+	if ( !pthread_mutex_trylock ( &cqueue.busy ) )
+		pthread_mutex_unlock ( &cqueue.busy );
+	else
+		ret++;
+
+	return ret;
 }

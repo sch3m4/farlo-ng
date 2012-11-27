@@ -45,7 +45,7 @@
 #define SAFE_FREE(a)        if(a!=0){free(a);a=0;}
 
 #ifndef CHANNEL_HOPPING_DELAY
-# define CHANNEL_HOPPING_DELAY  30000  // miliseconds
+# define CHANNEL_HOPPING_DELAY  30  // miliseconds
 #endif
 
 // wireless channels

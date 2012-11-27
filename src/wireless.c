@@ -37,10 +37,20 @@
 #include <ctype.h>
 #include <pthread.h>
 #include <errno.h>
+
+#ifndef __FAVOR_BSD
+# define __FAVOR_BSD
+#endif
+
+#include <netinet/ip.h>
 #include <netinet/in.h>
 #include <netinet/if_ether.h>
-#include <netinet/ether.h>
-#include <linux/wireless.h>
+
+#ifdef __linux__
+# include <linux/wireless.h>
+#else
+# warning "  >> WARNING!! << Channel hopping not supported"
+#endif
 
 #include "includes/main.h"
 #include "includes/wireless.h"
@@ -53,19 +63,6 @@
 #define IP_CLASS_C  3
 
 phtable_t networks = 0;
-
-struct ip
-{
-    u_int8_t ip_vhl;
-    u_int8_t ip_tos;			/* type of service */
-    u_short ip_len;			/* total length */
-    u_short ip_id;			/* identification */
-    u_short ip_off;			/* fragment offset field */
-    u_int8_t ip_ttl;			/* time to live */
-    u_int8_t ip_p;			/* protocol */
-    u_short ip_sum;			/* checksum */
-    u_int32_t ip_src, ip_dst;	/* source and dest address */
-};
 
 void init_wireless ()
 {
@@ -95,6 +92,7 @@ void finish_wireless()
     }
 }
 
+#ifdef __linux__
 void *channel_hopping ( void *param )
 {
     int i, fd;
@@ -126,6 +124,7 @@ void *channel_hopping ( void *param )
 
     return 0;
 }
+#endif /* __linux__ */
 
 void get_netinfo ( unsigned char *pkt , size_t len , struct wnetwork *net )
 {
@@ -139,14 +138,14 @@ void get_netinfo ( unsigned char *pkt , size_t len , struct wnetwork *net )
     case ETHERTYPE_IP:
         ip = (struct ip*)((unsigned char*)pkt + sizeof(unsigned short));
 
-        if ( 4*(ip->ip_vhl & 0x0F) < sizeof(struct ip) )
+        if ( ip->ip_hl < sizeof(struct ip) )
             break;
 
         if ( len - ((void*)ip - (void*)pkt) < sizeof ( struct ip) )
             break;
 
-        ip1 = ip->ip_dst;
-        ip2 = ip->ip_src;
+        ip1 = ip->ip_dst.s_addr;
+        ip2 = ip->ip_src.s_addr;
         break;
 
     case ETHERTYPE_ARP:

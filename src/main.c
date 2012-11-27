@@ -71,9 +71,11 @@ void usage ( char *name )
     fprintf ( stderr, "\n\t-p | --patterns <path> ------------> Networks patterns file");
     fprintf ( stderr, "\n\t-s | --supported ------------------> Show only supported networks");
     fprintf ( stderr, "\n\t-d | --dictionary <path> ----------> Auxiliary dictionary");
+#ifdef __linux__
     fprintf ( stderr, "\n\t-c | --channel <channels> ---------> Channels list (comma separated)");
     fprintf ( stderr, "\n\t-D | --delay <msec> ---------------> Delay between channels");
     fprintf ( stderr, "\n\t-n | --no-hop ---------------------> Do not do channel hopping");
+#endif
 
     return;
 }
@@ -81,11 +83,17 @@ void usage ( char *name )
 /* signal handler */
 void shandler ( int sign )
 {
-	static unsigned short retries = 0;
+	static unsigned short retries;
+	int remaining = 0;
 
-	signal ( sign, shandler );
+	if ( sign > 0 )
+		signal ( sign, shandler );
 
-	retries++;
+	if ( crack_queue_busy() > 0 && !retries++ )
+	{
+		fprintf ( stderr , "\n[i] Waiting for crack queue (%d jobs pending and 1 running)... (Press CTRL+C to finish)\n" , crack_count(), remaining );
+		return;
+	}
 
     if ( settings.hopping )
     {
@@ -96,8 +104,8 @@ void shandler ( int sign )
     if ( settings.handle != 0 )
         pcap_close ( settings.handle );
 
-    finish_wireless();
     finish_crackqueue();
+    finish_wireless();
     free_patterns();
     free_algorithms();
 
@@ -115,7 +123,12 @@ int main( int argc , char *argv[] )
     char                    errbuf[PCAP_ERRBUF_SIZE] = {0};
     unsigned short          ret = 0;
     char                    o = 0;
+
+#ifdef __linux__
     const char              schema[] = "i:f:p:sd:c:D:b:e:n";
+#else
+    const char              schema[] = "i:f:p:sd:b:e:";
+#endif
     int                     i = 0 , j = 0;
     unsigned short          channel = 0;
     static struct option    opc[] =
@@ -125,11 +138,13 @@ int main( int argc , char *argv[] )
         {"patterns", 1 , 0 , 'p'},
         {"supported", 0 , 0 , 's'},
         {"dictionary",1,0,'d'},
+#ifdef __linux__
         {"channels",1,0,'c'},
         {"delay",1,0,'D'},
+        {"no-hop",0,0,'n'},
+#endif
         {"bssid",1,0,'b'},
         {"encryption",1,0,'e'},
-        {"no-hop",0,0,'n'},
         {0, 0, 0, 0}
     };
 
@@ -293,7 +308,7 @@ cherror:
         if ( ( settings.handle = pcap_open_live ( settings.source, BUFSIZ, 1, 0, errbuf ) ) == NULL )
         {
             fprintf ( stderr, "\n[!] %s", errbuf );
-            shandler(1);
+            shandler(-1);
         }
     }
     else
@@ -301,7 +316,7 @@ cherror:
         if ( ( settings.handle = pcap_open_offline ( settings.source, errbuf ) ) == NULL )
         {
             fprintf ( stderr, "\n[!] %s", errbuf );
-            shandler(3);
+            shandler(-2);
         }
     }
 
@@ -312,7 +327,7 @@ cherror:
     if ( ( i = load_network_patterns() ) < 0 )
     {
         fprintf ( stderr , "\n[!] Error loading network patterns: %s" , GET_PATTERNS_ERRSTR(i) );
-        shandler(4);
+        shandler(-3);
     }
 
     settings.dlt = pcap_datalink(settings.handle);
@@ -320,14 +335,12 @@ cherror:
     switch ( settings.dlt )
     {
     	case DLT_IEEE802_11:
-    		break;
-
     	case DLT_IEEE802_11_RADIO:
     		break;
 
     	default:
     		fprintf ( stderr , "\n[e] Network datalink not supported: %s" , pcap_datalink_val_to_name( settings.dlt ) );
-    		shandler(5);
+    		shandler(-4);
     		break; // avoid IDE warning...
 
     }
@@ -391,11 +404,10 @@ cherror:
     if ( ( i = pcap_loop ( settings.handle, -1, procPacket, NULL ) ) < 0 )
     {
         fprintf ( stderr, "\n[!] %s\n\n", pcap_geterr ( settings.handle ) );
-        shandler(6);
+        shandler(-5);
     }
 
-	while(1)
-		sleep(5);
+    wait_crack_queue();
     shandler(0);
     return 0;
 }
