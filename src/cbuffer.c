@@ -39,25 +39,8 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <pthread.h>
-#include <semaphore.h>
 
 #include "includes/cbuffer.h"
-
-/* estructura del buffer circular */
-typedef struct cyclic_buffer
-{
-    size_t  size_buffer;
-    void    **buffer;
-    int     read;
-    int     write;
-
-    sem_t   s_data;
-    sem_t   s_space;
-
-    struct lock_access  lock;
-
-} CBuffer, *PCBuffer;
 
 void threads_init_lock ( struct lock_access *access )
 {
