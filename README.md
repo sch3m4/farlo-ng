@@ -31,4 +31,4 @@ This file specifies wich algorithm must be applied to each network (may be many 
 
 ## Credits
 
-Thanks to Seguridad Wireless guys and many others for disclousure their wireless security researches
+Thanks to buckynet *dudux and nir0zmel0N and many others for disclousure their wireless security researches
