@@ -35,6 +35,9 @@
 #ifndef __FARLO_NG_CBUFFER_H__
 # define __FARLO_NG_CBUFFER_H__
 
+#include <pthread.h>
+#include <semaphore.h>
+
 struct lock_access
 {
     pthread_mutex_t mutex;
@@ -44,7 +47,19 @@ struct lock_access
 };
 
 /* estructura del buffer circular */
-typedef struct cyclic_buffer CBuffer, *PCBuffer;
+typedef struct cyclic_buffer
+{
+    size_t  size_buffer;
+    void    **buffer;
+    int     read;
+    int     write;
+
+    sem_t   s_data;
+    sem_t   s_space;
+
+    struct lock_access  lock;
+
+} CBuffer, *PCBuffer;
 
 #define CBUFFER_NOFORCE_WAIT   0
 #define CBUFFER_FORCE_WAIT     1
